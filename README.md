@@ -1,16 +1,22 @@
-# Archive Reader
+# Dark Score Webtoon Reader
 
-Archive Reader is a SvelteKit + TypeScript application that generates shareable reading links for ZIP archives hosted on Google Drive or any CORS-friendly HTTP source. The reader streams long-form images directly in the browser, making it ideal for webtoon-style archives.
+Dark Score Webtoon Reader is a SvelteKit + TypeScript application that generates shareable reading links for ZIP archives hosted on Google Drive or any CORS-friendly HTTP source. The reader streams long-form images directly in the browser, making it ideal for webtoon-style archives.
+
+**Live Demo**: [https://dark-corser-webtoon-reader.vercel.app](https://dark-corser-webtoon-reader.vercel.app)
 
 > **Настройка названия сайта**: Название сайта можно изменить в файле `src/lib/config.ts` в переменной `SITE_NAME`. Это изменит название во всем приложении.
 
 ## Features
 
-- Generate `/read/<driveId>` links from Google Drive share URLs.
-- Generate `/read?src=<encoded-url>` links for direct HTTP(S) archives.
-- Server-side proxy endpoint for Google Drive to bypass CORS restrictions.
-- ZIP archive parsing with natural sorting and lazy-rendered image stack (max width 1000px).
-- Clear error messaging for unsupported archives, missing images, or blocked downloads.
+- **Google OAuth Integration**: Secure authentication with Google Drive API
+- **Private File Access**: Read private Google Drive files with proper authorization
+- **Public File Support**: Fallback to public Google Drive links
+- Generate `/read/<driveId>` links from Google Drive share URLs
+- Generate `/read?src=<encoded-url>` links for direct HTTP(S) archives
+- Server-side proxy endpoint for Google Drive to bypass CORS restrictions
+- ZIP archive parsing with natural sorting and lazy-rendered image stack (max width 1000px)
+- Clear error messaging for unsupported archives, missing images, or blocked downloads
+- **Privacy Policy & Terms of Service**: Compliant with Google OAuth requirements
 
 ## Getting Started
 
