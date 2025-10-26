@@ -60,7 +60,7 @@
 
 <main class="page">
   <section class="card">
-    <h1>Archive Reader</h1>
+    <h1>Создать ссылку для чтения</h1>
     <p class="description">
       Paste a Google Drive share link or any direct HTTP(S) archive URL. We'll generate a reader link that renders the images inline.
     </p>

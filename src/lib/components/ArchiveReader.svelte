@@ -2,6 +2,7 @@
   import { onDestroy } from 'svelte';
   import { detectArchive } from '$lib/utils/detectArchive';
   import { listZipImages } from '$lib/zip/extract';
+  import { googleAuthService } from '$lib/services/googleAuth';
 
   type SourceType = 'drive' | 'direct';
 
@@ -33,12 +34,32 @@
     status = 'Fetching archive…';
 
     try {
+      // Подготавливаем headers для запроса
+      const headers: HeadersInit = {};
+      
+      // Если это Google Drive и пользователь авторизован, добавляем токен
+      if (currentType === 'drive' && googleAuthService.isAuthenticated()) {
+        const accessToken = googleAuthService.getAccessToken();
+        if (accessToken) {
+          headers['Authorization'] = `Bearer ${accessToken}`;
+        }
+      }
+
       const response = await fetch(
-        currentType === 'drive' ? `/api/proxy/${encodeURIComponent(currentSource)}` : currentSource
+        currentType === 'drive' ? `/api/proxy/${encodeURIComponent(currentSource)}` : currentSource,
+        { headers }
       );
 
       if (!response.ok) {
-        throw new Error(`Unable to fetch archive (status ${response.status})`);
+        if (response.status === 401) {
+          throw new Error('Authentication required. Please sign in to access this file.');
+        } else if (response.status === 403) {
+          throw new Error('Access denied. You may not have permission to access this file.');
+        } else if (response.status === 404) {
+          throw new Error('File not found or not accessible.');
+        } else {
+          throw new Error(`Unable to fetch archive (status ${response.status})`);
+        }
       }
 
       const blob = await response.blob();
@@ -144,7 +165,6 @@
   .images {
     display: flex;
     flex-direction: column;
-    gap: 12px;
   }
 
   .image-frame {

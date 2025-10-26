@@ -12,7 +12,6 @@
 </svelte:head>
 
 <main class="reader-page">
-  <h1>Archive Reader</h1>
   {#if src}
     <p class="hint">Direct downloads require CORS-permissive hosts. If loading fails, upload the archive to Google Drive and use a generated link.</p>
     <ArchiveReader sourceType="direct" source={src} />

@@ -1,5 +1,6 @@
 <script lang="ts">
   import favicon from '$lib/assets/favicon.svg';
+  import GoogleAuthButton from '$lib/components/GoogleAuthButton.svelte';
 
   let { children } = $props();
 </script>
@@ -9,7 +10,15 @@
 </svelte:head>
 
 <div class="app-shell">
-  {@render children?.()}
+  <header class="app-header">
+    <div class="header-content">
+      <h1 class="app-title">Archive Reader</h1>
+      <GoogleAuthButton />
+    </div>
+  </header>
+  <main class="app-main">
+    {@render children?.()}
+  </main>
 </div>
 
 <style>
@@ -37,5 +46,50 @@
 
   .app-shell {
     min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .app-header {
+    background: rgba(26, 26, 26, 0.95);
+    border-bottom: 1px solid #2f2f2f;
+    padding: 1rem 0;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(10px);
+  }
+
+  .header-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .app-title {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #eee;
+  }
+
+  .app-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  @media (max-width: 600px) {
+    .header-content {
+      padding: 0 1rem;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .app-title {
+      font-size: 1.25rem;
+    }
   }
 </style>
