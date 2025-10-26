@@ -1,4 +1,5 @@
 import { browser } from '$app/environment';
+import { PUBLIC_GOOGLE_CLIENT_ID } from '$env/static/public';
 
 // Google Identity Services types
 declare global {
@@ -19,10 +20,9 @@ declare global {
   }
 }
 
-const GOOGLE_CLIENT_ID = import.meta.env.PUBLIC_GOOGLE_CLIENT_ID || '697596246733-hioncmgqtau3vpr5mbn6qq6g4kkmv9cr.apps.googleusercontent.com';
+const GOOGLE_CLIENT_ID = PUBLIC_GOOGLE_CLIENT_ID;
 const DRIVE_SCOPE = 'https://www.googleapis.com/auth/drive.readonly';
 const TOKEN_KEY = 'google_drive_access_token';
-
 export interface AuthState {
   isAuthenticated: boolean;
   accessToken: string | null;
