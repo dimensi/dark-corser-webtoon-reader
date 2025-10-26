@@ -3,6 +3,8 @@
   import { detectArchive } from '$lib/utils/detectArchive';
   import { listZipImages } from '$lib/zip/extract';
   import { googleAuthService } from '$lib/services/googleAuth';
+  import { fetchDriveFile, type DriveApiError } from '$lib/utils/driveApi';
+  import DriveFileLoader from './DriveFileLoader.svelte';
 
   type SourceType = 'drive' | 'direct';
 
@@ -34,21 +36,19 @@
     status = 'Fetching archive…';
 
     try {
-      // Подготавливаем headers для запроса
-      const headers: HeadersInit = {};
-      
-      // Если это Google Drive и пользователь авторизован, добавляем токен
-      if (currentType === 'drive' && googleAuthService.isAuthenticated()) {
-        const accessToken = googleAuthService.getAccessToken();
-        if (accessToken) {
-          headers['Authorization'] = `Bearer ${accessToken}`;
-        }
-      }
+      let response: Response;
 
-      const response = await fetch(
-        currentType === 'drive' ? `/api/proxy/${encodeURIComponent(currentSource)}` : currentSource,
-        { headers }
-      );
+      if (currentType === 'drive') {
+        // Для Google Drive используем прямые запросы к API
+        const accessToken = googleAuthService.isAuthenticated() 
+          ? googleAuthService.getAccessToken() 
+          : undefined;
+        
+        response = await fetchDriveFile(currentSource, accessToken || undefined);
+      } else {
+        // Для прямых URL используем обычный fetch
+        response = await fetch(currentSource);
+      }
 
       if (!response.ok) {
         if (response.status === 401) {
@@ -62,45 +62,19 @@
         }
       }
 
-      const blob = await response.blob();
-      const headerBytes = new Uint8Array(await blob.slice(0, 8).arrayBuffer());
-      const archiveType = detectArchive(headerBytes);
-
-      if (archiveType === 'rar') {
-        error = 'RAR archives are not supported in this build.';
-        status = 'Stopped';
-        return;
-      }
-
-      if (archiveType !== 'zip') {
-        error = 'Unsupported archive format. Please upload a ZIP file.';
-        status = 'Stopped';
-        return;
-      }
-
-      status = 'Parsing archive…';
-      const entries = await listZipImages(blob);
-      total = entries.length;
-
-      if (total === 0) {
-        error = 'No images found in archive.';
-        status = 'Stopped';
-        return;
-      }
-
-      for (const entry of entries) {
-        extracted += 1;
-        status = `Extracting ${extracted}/${total}…`;
-        const imageBlob = await entry.file.async('blob');
-        const objectUrl = URL.createObjectURL(imageBlob);
-        objectUrls.push(objectUrl);
-        images = [...images, { name: entry.name, url: objectUrl }];
-      }
-
-      status = `Loaded ${total} image${total === 1 ? '' : 's'}.`;
+      await processArchive(response);
     } catch (err) {
       console.error(err);
-      if (err instanceof Error) {
+      
+      if (err && typeof err === 'object' && 'status' in err) {
+        // Обработка DriveApiError
+        const driveError = err as DriveApiError;
+        if (driveError.requiresAuth) {
+          error = 'Authentication required. Please sign in to access this file.';
+        } else {
+          error = driveError.message;
+        }
+      } else if (err instanceof Error) {
         if (err.name === 'TypeError') {
           error = 'Failed to fetch archive. The host may not allow cross-origin downloads. Try using a Google Drive link instead.';
         } else {
@@ -111,6 +85,45 @@
       }
       status = 'Stopped';
     }
+  }
+
+  async function processArchive(response: Response) {
+    const blob = await response.blob();
+    const headerBytes = new Uint8Array(await blob.slice(0, 8).arrayBuffer());
+    const archiveType = detectArchive(headerBytes);
+
+    if (archiveType === 'rar') {
+      error = 'RAR archives are not supported in this build.';
+      status = 'Stopped';
+      return;
+    }
+
+    if (archiveType !== 'zip') {
+      error = 'Unsupported archive format. Please upload a ZIP file.';
+      status = 'Stopped';
+      return;
+    }
+
+    status = 'Parsing archive…';
+    const entries = await listZipImages(blob);
+    total = entries.length;
+
+    if (total === 0) {
+      error = 'No images found in archive.';
+      status = 'Stopped';
+      return;
+    }
+
+    for (const entry of entries) {
+      extracted += 1;
+      status = `Extracting ${extracted}/${total}…`;
+      const imageBlob = await entry.file.async('blob');
+      const objectUrl = URL.createObjectURL(imageBlob);
+      objectUrls.push(objectUrl);
+      images = [...images, { name: entry.name, url: objectUrl }];
+    }
+
+    status = `Loaded ${total} image${total === 1 ? '' : 's'}.`;
   }
 
   function cleanup() {

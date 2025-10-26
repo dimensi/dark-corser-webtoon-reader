@@ -4,6 +4,12 @@ import type { RequestHandler } from './$types';
 const DRIVE_ENDPOINT = 'https://drive.google.com/uc?export=download&id=';
 const DRIVE_API_ENDPOINT = 'https://www.googleapis.com/drive/v3/files';
 
+/**
+ * Proxy endpoint для Google Drive файлов
+ * Используется как fallback когда прямые запросы с клиента не работают
+ * (например, из-за CORS ограничений или проблем с авторизацией)
+ */
+
 async function resolveDriveResponse(id: string, fetchImpl: typeof fetch): Promise<Response> {
   const initial = await fetchImpl(`${DRIVE_ENDPOINT}${encodeURIComponent(id)}`, {
     headers: {
