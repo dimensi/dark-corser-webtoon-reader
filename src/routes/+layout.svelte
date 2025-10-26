@@ -1,7 +1,7 @@
 <script lang="ts">
-  import favicon from '$lib/assets/favicon.svg';
-  import GoogleAuthButton from '$lib/components/GoogleAuthButton.svelte';
-  import { SITE_NAME } from '$lib/config';
+  import favicon from "$lib/assets/favicon.svg";
+  import GoogleAuthButton from "$lib/components/GoogleAuthButton.svelte";
+  import { SITE_NAME } from "$lib/config";
 
   let { children } = $props();
 </script>
@@ -13,7 +13,7 @@
 <div class="app-shell">
   <header class="app-header">
     <div class="header-content">
-      <h1 class="app-title">{SITE_NAME}</h1>
+      <a href="/"><h1 class="app-title">{SITE_NAME}</h1></a>
       <GoogleAuthButton />
     </div>
   </header>
@@ -25,7 +25,13 @@
 <style>
   :global(body) {
     margin: 0;
-    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-family:
+      "Inter",
+      system-ui,
+      -apple-system,
+      BlinkMacSystemFont,
+      "Segoe UI",
+      sans-serif;
     background: #111;
     color: #eee;
   }
