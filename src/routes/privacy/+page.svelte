@@ -10,7 +10,7 @@
 <main class="privacy-page">
   <div class="container">
     <h1>Privacy Policy</h1>
-    <p class="last-updated">Last updated: {new Date().toLocaleDateString()}</p>
+    <p class="last-updated">Last updated: 26.10.2025 17:00</p>
 
     <section>
       <h2>1. Information We Collect</h2>
