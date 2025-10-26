@@ -1,13 +1,14 @@
 <script lang="ts">
   import ArchiveReader from '$lib/components/ArchiveReader.svelte';
   import type { PageData } from './$types';
+  import { SITE_NAME } from '$lib/config';
 
   const props = $props<{ data: PageData }>();
   const data = $derived(props.data);
 </script>
 
 <svelte:head>
-  <title>Archive Reader · {data.id}</title>
+  <title>{SITE_NAME} · {data.id}</title>
 </svelte:head>
 
 <main class="reader-page">

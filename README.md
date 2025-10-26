@@ -2,6 +2,8 @@
 
 Archive Reader is a SvelteKit + TypeScript application that generates shareable reading links for ZIP archives hosted on Google Drive or any CORS-friendly HTTP source. The reader streams long-form images directly in the browser, making it ideal for webtoon-style archives.
 
+> **Настройка названия сайта**: Название сайта можно изменить в файле `src/lib/config.ts` в переменной `SITE_NAME`. Это изменит название во всем приложении.
+
 ## Features
 
 - Generate `/read/<driveId>` links from Google Drive share URLs.

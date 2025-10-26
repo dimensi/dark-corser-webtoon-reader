@@ -1,6 +1,7 @@
 <script lang="ts">
   import favicon from '$lib/assets/favicon.svg';
   import GoogleAuthButton from '$lib/components/GoogleAuthButton.svelte';
+  import { SITE_NAME } from '$lib/config';
 
   let { children } = $props();
 </script>
@@ -12,7 +13,7 @@
 <div class="app-shell">
   <header class="app-header">
     <div class="header-content">
-      <h1 class="app-title">Archive Reader</h1>
+      <h1 class="app-title">{SITE_NAME}</h1>
       <GoogleAuthButton />
     </div>
   </header>

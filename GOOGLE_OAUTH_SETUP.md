@@ -1,5 +1,7 @@
 # Настройка Google OAuth для Archive Reader
 
+> **Примечание**: Название "Archive Reader" можно изменить в файле `src/lib/config.ts`
+
 ## Настройка Google Cloud Console
 
 ### 1. Создание проекта (если еще не создан)

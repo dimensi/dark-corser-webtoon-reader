@@ -1,5 +1,6 @@
 <script lang="ts">
   import { browser } from '$app/environment';
+  import { SITE_NAME } from '$lib/config';
 
   let driveOrHttpUrl = '';
   let generatedPath: string | null = null;
@@ -55,7 +56,7 @@
 </script>
 
 <svelte:head>
-  <title>Archive Reader · Link Generator</title>
+  <title>{SITE_NAME} · Link Generator</title>
 </svelte:head>
 
 <main class="page">
