@@ -5,7 +5,7 @@
 
 export const APP_CONFIG = {
   // Название сайта - измените это значение для смены названия во всем приложении
-  SITE_NAME: 'Dark Score Webtoon Reader',
+  SITE_NAME: 'Dark Corses Webtoon Reader',
   
   // Дополнительные настройки можно добавить здесь
   // SITE_DESCRIPTION: '...',
